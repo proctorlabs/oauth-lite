@@ -1,10 +1,9 @@
 use crate::error::*;
-use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
 
 mod ldap;
 
-pub use ldap::LdapAuthenticator;
+pub use crate::args::LdapAuthenticator;
 
 pub trait Authenticator {
     fn login(&self, user: &str, password: &str) -> Result<User>;
@@ -17,14 +16,9 @@ pub struct User {
 }
 
 lazy_static! {
-    static ref AUTH: RwLock<LdapAuthenticator> = Default::default();
-}
-
-pub fn set_authenticator(new: LdapAuthenticator) {
-    let mut old = AUTH.write();
-    *old = new;
+    static ref AUTH: &'static LdapAuthenticator = &crate::CONFIG.login;
 }
 
 pub fn login(path: &str, password: &str) -> Result<User> {
-    AUTH.read().login(path, password)
+    AUTH.login(path, password)
 }

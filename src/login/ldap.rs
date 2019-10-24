@@ -1,15 +1,6 @@
 use super::*;
+use crate::args::LdapAuthenticator;
 use ldap3::{LdapConn, Scope, SearchEntry};
-use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
-
-#[derive(Default, Debug, Serialize, Deserialize, Clone)]
-pub struct LdapAuthenticator {
-    url: String,
-    bind_dn: String,
-    user_dn: String,
-    attrs: HashSet<String>,
-}
 
 impl Authenticator for LdapAuthenticator {
     fn login(&self, path: &str, password: &str) -> Result<User> {

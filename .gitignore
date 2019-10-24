@@ -1,5 +1,5 @@
 /target
 **/*.rs.bk
 tmp
-config.yml
+/config.yml
 .oauth.dat

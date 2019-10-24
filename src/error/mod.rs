@@ -44,3 +44,7 @@ impl From<hmac::crypto_mac::MacError> for Error {
         Self::Authentication(format!("Signing failed -> {}", e))
     }
 }
+
+impl From<Error> for () {
+    fn from(_: Error) -> Self {}
+}

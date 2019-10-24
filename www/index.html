@@ -1,19 +1,33 @@
-<html>
-  <head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-US">
+  <head profile="http://www.w3.org/2005/10/profile">
+    <meta charset="utf-8"/>
+    <link rel="icon" type="image/png" href="/assets/home.svg">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="assets/site.css" rel="stylesheet">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      var redir = window.location.hash.substr(1);
+      if (redir.length > 0) {
+        redir = '/authorize?' + redir;
+      } else {
+        redir = "/authorize"
+      }
+      window.onload = function() {
+        document.login.action = redir;
+      }
+    </script>
   </head>
 
   <body>
     <div class="wrapper fadeInDown">
       <div id="formContent">
         <div class="fadeIn first">
-          <img src="assets/home.svg" id="icon" alt="User Icon" />
+          <img src="assets/home.svg" id="icon" alt="Home" />
         </div>
 
-        <form action="/authorize?response_type=code&client_id=LocalClient" method="post" enctype="application/x-www-form-urlencoded">
+        <form name="login" action="/authorize?response_type=code&client_id=example" method="post" enctype="application/x-www-form-urlencoded">
           <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
           <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
           <input type="submit" class="fadeIn fourth" value="Log In">
