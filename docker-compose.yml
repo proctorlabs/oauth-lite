@@ -2,7 +2,7 @@ version: "3.7"
 services:
   oauth-lite:
     build: "."
-    command: "--ldap-attrs mail uid uidNumber --ldap-url 'ldap://host-server:389' --ldap-bind-dn 'ou=users,dc=proctor,dc=id' -c 'test=http://localhost/authenticate' -e true -l debug"
+    command: "--ldap-attrs mail uid uidNumber --ldap-url 'ldap://localhost:389' --ldap-bind-dn 'ou=users,dc=example,dc=com' -c 'test=http://localhost/authenticate' -e true -l info"
 
   nginx:
     image: "nginx:mainline"
