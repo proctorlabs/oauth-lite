@@ -77,7 +77,9 @@ impl OAuthEndpoint {
             }
         }
         if !authenticated && req.0.session.lock().user.is_some() {
-            resp.body = Some("Authenticated".into());
+            resp.session = Some(req.0.session.clone());
+            resp.status = 302;
+            resp.location = Some("/".into());
         } else if !authenticated
             && req.0.query.get("client_id").is_some()
             && req.0.query.get("response_type").is_some()
