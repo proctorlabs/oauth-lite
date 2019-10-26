@@ -12,7 +12,7 @@
       if (redir.length > 0) {
         redir = '/authorize?' + redir;
       } else {
-        redir = "/authorize"
+        redir = "/authorize?response_type=code&client_id=default"
       }
       window.onload = function() {
         document.login.action = redir;

@@ -65,25 +65,21 @@ impl OAuthEndpoint {
 
     pub fn authenticate(req: AuthRequest) -> Result<AuthResponse, Error> {
         let mut resp = AuthResponse::default();
-        let mut authenticated = false;
+
+        // Validate a code
         if let Some(code) = req.0.query.get("code") {
             if let Some(t) = Tokens::authorize(code)? {
                 if let Some(sd) = SessionData::get(t.owner_id)? {
                     resp.session = Some(Arc::new(Mutex::new(sd)));
                     resp.status = 302;
                     resp.location = Some("/".into());
-                    authenticated = true;
+                    return Ok(resp);
                 }
             }
         }
-        if !authenticated && req.0.session.lock().user.is_some() {
-            resp.session = Some(req.0.session.clone());
-            resp.status = 302;
-            resp.location = Some("/".into());
-        } else if !authenticated
-            && req.0.query.get("client_id").is_some()
-            && req.0.query.get("response_type").is_some()
-        {
+
+        // New authorization request
+        if req.0.query.get("client_id").is_some() && req.0.query.get("response_type").is_some() {
             let (c, r) = (
                 req.0.query.get("client_id"),
                 req.0.query.get("response_type"),
@@ -94,10 +90,17 @@ impl OAuthEndpoint {
                 c.unwrap(),
                 r.unwrap()
             ));
-        } else if !authenticated {
-            resp.status = 403;
-            resp.body = Some("Authentication failed".into());
+            return Ok(resp);
         }
+
+        // User is already authenticated
+        if req.0.session.lock().user.is_some() {
+            resp.status = 200;
+            return Ok(resp);
+        }
+
+        resp.status = 403;
+        resp.body = Some("Authentication failed".into());
         Ok(resp)
     }
 
